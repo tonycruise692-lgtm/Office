@@ -1,11 +1,11 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, send_file
 import brain
 
 app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return render_template("office.html")
+    return send_file("office.html")
 
 @app.route("/command", methods=["POST"])
 def command():
