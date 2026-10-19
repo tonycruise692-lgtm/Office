@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crypto Office</title>
+<style>
+  body { font-family: -apple-system, sans-serif; background: #0d1117; color: #e6edf3; margin: 0; padding: 20px; }
+  .box { max-width: 600px; margin: 0 auto; }
+  h1 { color: #58a6ff; }
+  #chat { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 15px; min-height: 200px; margin-bottom: 15px; }
+  .msg { margin: 8px 0; padding: 8px 12px; border-radius: 8px; }
+  .you { background: #1f6feb; color: white; text-align: right; }
+  .bot { background: #30363d; }
+  .detail { font-size: 13px; color: #8b949e; margin: 4px 0 4px 12px; }
+  input { width: 70%; padding: 12px; border-radius: 8px; border: 1px solid #30363d; background: #0d1117; color: white; font-size: 16px; }
+  button { padding: 12px 20px; border-radius: 8px; border: none; background: #238636; color: white; font-size: 16px; font-weight: bold; }
+</style>
+</head>
+<body>
+<div class="box">
+  <h1>ð¢ Crypto Office</h1>
+  <p>Your agent team is on duty. Educational tool â not financial advice.</p>
+  <div id="chat"></div>
+  <input id="text" placeholder="Try: market update" onkeydown="if(event.key=='Enter')send()">
+  <button onclick="send()">Send</button>
+</div>
+<script>
+function add(cls, txt) {
+  const d = document.createElement("div");
+  d.className = "msg " + cls;
+  d.textContent = txt;
+  document.getElementById("chat").appendChild(d);
+}
+async function send() {
+  const box = document.getElementById("text");
+  const t = box.value.trim();
+  if (!t) return;
+  add("you", t);
+  box.value = "";
+  try {
+    const r = await fetch("/command", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({text: t})
+    });
+    const data = await r.json();
+    add("bot", data.reply);
+    (data.details || []).forEach(x => {
+      const d = document.createElement("div");
+      d.className = "detail";
+      d.textContent = "â¢ " + x;
+      document.getElementById("chat").appendChild(d);
+    });
+  } catch (e) {
+    add("bot", "Office phone line error ð try again");
+  }
+}
+add("bot", "Welcome to the office! Try 'market update', 'latest news', 'reddit buzz', or 'help'");
+</script>
+</body>
+</html>
