@@ -64,18 +64,22 @@ AGENT_TASKS = {
 }
 def handle(message):
     msg = message.lower()
+    details = "ok"
 
     if "verdict" in msg:
-        return market_verdict()
-    if "market" in msg:
-        return get_crypto_prices()
-    if "news" in msg:
+        reply = market_verdict()
+    elif "market" in msg:
+        reply = get_crypto_prices()
+    elif "news" in msg:
         headlines = get_news()
-        return " | ".join(headlines)
-    if "reddit" in msg or "buzz" in msg:
+        reply = " | ".join(headlines)
+    elif "reddit" in msg or "buzz" in msg:
         posts = reddit_buzz()
-        return " | ".join(posts)
-    if "security" in msg or "safe" in msg:
-        return "Educational tool only - NOT financial advice."
+        reply = " | ".join(posts)
+    elif "security" in msg or "safe" in msg:
+        reply = "Educational tool only - NOT financial advice."
+    else:
+        reply = "Manager: Try one of these - 'market update', 'latest news', 'reddit buzz', or 'market verdict'"
+        details = "help"
 
-    return "Manager: Try one of these commands - 'market update', 'latest news', 'reddit buzz', or 'market verdict'"
+    return reply, details
