@@ -18,7 +18,7 @@ def get_news():
     try:
         r = requests.get("https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fcointelegraph.com%2Frss", timeout=10)
         items = r.json().get("items", [])[:5]
-        return [i["title for i in items] if items else ["No news loaded"]
+        return [i["title"] for i in items] if items else ["No news loaded"]
     except Exception:
         return ["News feed error"]
 
@@ -36,11 +36,11 @@ def market_verdict():
         r = requests.get("https://api.coingecko.com/api/v3/global", timeout=10)
         change = r.json()["data"]["market_cap_change_percentage_24h_usd"]
         if change > 2:
-            return f"Market is UP {round(change,1)}% - green across the board â"
+            return f"Market is UP {round(change,1)}% - green across the board"
         elif change < -2:
-            return f"Market is DOWN {round(change,1)}% - be careful â"
+            return f"Market is DOWN {round(change,1)}% - be careful"
         else:
-            return f"Market is flat ({round(change,1)}%) - sideways day "ï¿½"
+            return f"Market is flat ({round(change,1)}%) - sideways day"
     except Exception:
         return "Verdict unavailable (feed error)"
 
@@ -52,7 +52,7 @@ def run_agent(name, task):
     elif name == "reddit":
         return reddit_buzz()
     elif name == "security":
-        return ["â ï¸ Educational tool only - NOT financial advice. Verify everything yourself."]
+        return ["Educational tool only - NOT financial advice. Verify everything yourself."]
     return ["Nothing to report"]
 
 AGENT_TASKS = {
